@@ -1,8 +1,9 @@
 package Main.Abstract;
 
+import Ultilities.Concrete.SicaklikUretici;
+
 public interface IEyleyici {
-    boolean SogutucuAc();
-    boolean SogutucuKapat();
-    boolean SogutucuAcikmi(ISicaklikAlgilayici sicaklikAlgilayici);
-    boolean SogutucuKapalimi(ISicaklikAlgilayici sicaklikAlgilayici);
+    void SogutucuAc();
+    void SogutucuKapat();
+    void observerEkle(SicaklikUretici sicaklikUretici);
 }

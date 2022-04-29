@@ -1,92 +1,96 @@
 package Operations.Concrete;
 
 import DataAccess.Concrete.PostreSqlSunucu;
-import Main.Abstract.IAgArayüzü;
+import Operations.Abstract.IKullaniciDogrulama;
 import Operations.Abstract.ISogutucuBilgiSistemi;
-import Ultilities.Abstract.IEkran;
-import Ultilities.Abstract.ITusTakimi;
 import Ultilities.Concrete.Araclar;
 import Ultilities.Concrete.Ekran;
 import Ultilities.Concrete.TusTakimi;
 
 import java.io.IOException;
 
-public class KullaniciDogrulama {
-    private IEkran ekran;
-    private ITusTakimi tusTakimi;
+public class KullaniciDogrulama implements IKullaniciDogrulama {
+
     private ISogutucuBilgiSistemi sogutucuBilgiSistemi;
-    private IAgArayüzü agArayüzü;
     private String kullaniciAdi;
 
-    public KullaniciDogrulama(IAgArayüzü agArayüzü){
-        ekran = new Ekran();
-        tusTakimi =new TusTakimi();
-        sogutucuBilgiSistemi=new SogutucuBilgiSistemi(new PostreSqlSunucu());
-        this.agArayüzü=agArayüzü;
+    public KullaniciDogrulama(ISogutucuBilgiSistemi sogutucuBilgiSistemi){
+        this.sogutucuBilgiSistemi=sogutucuBilgiSistemi;
     }
-    public void dogrula() throws IOException {
-        ekran.mesajGoruntule("Hoşgeldiniz...");
-        ekran.mesajGoruntule("Kullanici Adinizi giriniz: ");
-        kullaniciAdi= tusTakimi.kullaniciVerisiAl();
+    public boolean dogrula() throws IOException {
+        Ekran.mesajGoruntule("Kullanici Adinizi giriniz: ");
+        kullaniciAdi= TusTakimi.kullaniciVerisiAl();
 
         if(kullaniciAdiDogrula(kullaniciAdi)){
-            sifreKontrol();
+            if(sifreKontrol()){
+                return true;
+            }
         }
         else{
             int sayac=1;
             do{
-                ekran.mesajGoruntule("Girdiginiz kullanıcı adi hatali..");
-                ekran.mesajGoruntule("Tekrar Kullanici Adi Giriniz: ");
-                kullaniciAdi=tusTakimi.kullaniciVerisiAl();
+                Ekran.mesajGoruntule("Girdiginiz kullanıcı adi hatali..");
+                Ekran.mesajGoruntule("Tekrar Kullanici Adi Giriniz: ");
+                kullaniciAdi=TusTakimi.kullaniciVerisiAl();
                 if(kullaniciAdiDogrula(kullaniciAdi)){
-                    sifreKontrol();
+                    if(sifreKontrol())
+                        return true;
                 }
-                ekran.ekranTemizle();
+
                 sayac++;
             }while (sayac<3);
-            ekran.mesajGoruntule("3 den fazla hatali kullanici adi girdiniz.Cikis yapiliyor...");
+            Ekran.mesajGoruntule("3 den fazla hatali kullanici adi girdiniz.Cikis yapiliyor...");
             Araclar.bekle();
             System.exit(0);
         }
+        return false;
     }
-    private void sifreKontrol() throws IOException {
-        ekran.mesajGoruntule("Sifre giriniz: ");
-        String sifre = tusTakimi.kullaniciVerisiAl();
+    private boolean sifreKontrol() throws IOException {
+        Ekran.mesajGoruntule("Sifre giriniz: ");
+        String sifre = TusTakimi.kullaniciVerisiAl();
 
         if(kullaniciDogrula(kullaniciAdi,sifre)){
-            ekran.mesajGoruntule("Giriş Başarılı..."+ kullaniciAdi);
-            agArayüzü.islemSecimi();
+            Ekran.mesajGoruntule("Giriş Başarılı..."+ kullaniciAdi);
+            return true;
         }
         else{
 
             int sayac=1;
             do{
-                ekran.mesajGoruntule("Girdiginiz Sifre Hatali..");
-                ekran.mesajGoruntule("Tekrar Sifre Giriniz: ");
-                sifre=tusTakimi.kullaniciVerisiAl();
+                Ekran.mesajGoruntule("Girdiginiz Sifre Hatali..");
+                Ekran.mesajGoruntule("Tekrar Sifre Giriniz: ");
+                sifre=TusTakimi.kullaniciVerisiAl();
                 if(kullaniciDogrula(kullaniciAdi,sifre)){
-                    ekran.mesajGoruntule("Giris Basarılı..."+ kullaniciAdi);
-                    ekran.ekranTemizle();
-                    agArayüzü.islemSecimi();
+                    Ekran.mesajGoruntule("Giris Basarılı..."+ kullaniciAdi);
+                    return true;
                 }
                 sayac++;
             }while (sayac<3);
-            ekran.mesajGoruntule("3 den fazla hatali sifre girdiniz.Cikis yapiliyor...");
+            Ekran.mesajGoruntule("3 den fazla hatali sifre girdiniz.Cikis yapiliyor...");
             Araclar.bekle();
             System.exit(0);
         }
+        return false;
     }
     private boolean kullaniciAdiDogrula(String kullaniciAdi) {
-        ekran.mesajGoruntule("Kullanici Adi Dogrulaniyor...");
+        Ekran.mesajGoruntule("Kullanici Adi Dogrulaniyor...");
         Araclar.bekle(2000);
-        if(sogutucuBilgiSistemi.kullaniciAdiDogrula(kullaniciAdi)){return true;}
+        if(sogutucuBilgiSistemi.kullaniciAdiDogrula(kullaniciAdi)){
+            Ekran.mesajGoruntule("Kullanici Adi Doğrulama Başarılı...");
+            Araclar.bekle();
+            return true;
+        }
         return false;
     }
 
     private boolean kullaniciDogrula(String kullaniciAdi,String sifre){
-        ekran.mesajGoruntule("Sifre Dogrulanıyor...");
+        Ekran.mesajGoruntule("Sifre Dogrulanıyor...");
         Araclar.bekle(2000);
-        if(sogutucuBilgiSistemi.kullaniciDogrula(kullaniciAdi,sifre)){return true;}
+        if(sogutucuBilgiSistemi.kullaniciDogrula(kullaniciAdi,sifre)){
+            Ekran.mesajGoruntule("Şifre Doğrulama Başarılı...");
+            Araclar.bekle();
+            return true;
+        }
         return false;
     }
 }

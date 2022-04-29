@@ -2,35 +2,24 @@ package Operations.Concrete;
 
 import Operations.Abstract.Islem;
 import Ultilities.Concrete.Araclar;
-import Ultilities.Abstract.IEkran;
-import Main.Abstract.IEyleyici;
 import Main.Abstract.ISicaklikAlgilayici;
+import Ultilities.Concrete.Ekran;
+import Ultilities.Concrete.SicaklikUretici;
 
-public class SogutucuAcma extends Islem {
-
-    public SogutucuAcma(IEkran ekran, IEyleyici eyleyici, ISicaklikAlgilayici sicaklikAlgilayici) {
-        super(ekran, eyleyici, sicaklikAlgilayici);
-    }
-
+public class SogutucuAcma implements Islem {
     @Override
     public void islemYap() {
-        observerEkle();
-        ekran.mesajGoruntule("Sogutucu acma islemini sectiniz.");
-        ekran.mesajGoruntule("Sogutucu acma islemi baslatiliyor...");
-        Araclar.bekle(2000);
-        if(eyleyici.SogutucuKapalimi(sicaklikAlgilayici))
-        {
-            ekran.mesajGoruntule("Sicaklik düsürülüyor...");
-            haberVer("sicaklikdüsür");
+            Ekran.mesajGoruntule("Sogutucu acma islemini sectiniz.");
+            Ekran.mesajGoruntule("Sogutucu acma islemi baslatiliyor...");
             Araclar.bekle(2000);
-            ekran.mesajGoruntule("Sogutucu Devrede !!!");
+            Ekran.mesajGoruntule("Sicaklik düsürülüyor...");
+            Araclar.bekle(2000);
+            Ekran.mesajGoruntule("Sogutucu Devrede !!!");
             Araclar.bekle();
         }
-        else
-        {
-            ekran.mesajGoruntule("Sogutucu zaten acik...");
-        }
-        ekran.mesajGoruntule("Ortalama Sicaklik Degeri: "+ sicaklikAlgilayici.getSicaklikDegeri());
+
 
     }
-}
+
+
+

@@ -2,22 +2,17 @@ package Operations.Concrete;
 
 import Operations.Abstract.Islem;
 import Ultilities.Concrete.Araclar;
-import Ultilities.Abstract.IEkran;
-import Main.Abstract.ISicaklikAlgilayici;
+import Ultilities.Concrete.Ekran;
+import Ultilities.Concrete.SicaklikUretici;
 
-public class SicaklikGörüntüleme extends Islem {
-    public SicaklikGörüntüleme(IEkran ekran, ISicaklikAlgilayici sicaklikAlgilayici) {
-        super(ekran, null, sicaklikAlgilayici);
-    }
-
+public class SicaklikGörüntüleme implements Islem {
     @Override
     public void islemYap() {
-        ekran.mesajGoruntule("Sicaklik görüntüleme islemini sectiniz.");
-        ekran.mesajGoruntule("Sicaklik görüntüleme islemi baslatiliyor...");
+        Ekran.mesajGoruntule("Sicaklik görüntüleme islemini sectiniz.");
+        Ekran.mesajGoruntule("Sicaklik görüntüleme islemi baslatiliyor...");
         Araclar.bekle(2000);
-
-        ekran.mesajGoruntule("Algilayici'dan sicaklik degeri aliniyor...");
+        Ekran.mesajGoruntule("Algilayici'dan sicaklik degeri aliniyor...");
         Araclar.bekle(2000);
-        ekran.mesajGoruntule("Ortalama Sicaklik Degeri: "+ sicaklikAlgilayici.getSicaklikDegeri());
+        Ekran.mesajGoruntule("Ortalama sicaklik degeri: "+ SicaklikUretici.getSicaklikDegeri());
     }
 }

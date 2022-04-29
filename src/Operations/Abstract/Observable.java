@@ -20,7 +20,7 @@ public abstract class Observable {
         observerList.remove(observer);
     }
 
-    public void haberVer(String deger){
+    protected void haberVer(String deger){
         for (Observer observer : observerList) {
             observer.update(deger);
         }

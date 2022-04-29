@@ -2,30 +2,60 @@ package Main.Concrete;
 
 import Main.Abstract.IEyleyici;
 import Main.Abstract.ISicaklikAlgilayici;
+import Operations.Abstract.Islem;
+import Operations.Abstract.Observable;
+import Operations.Concrete.SogutucuAcma;
+import Operations.Concrete.SogutucuKapatma;
+import Ultilities.Concrete.Ekran;
+import Ultilities.Concrete.SicaklikUretici;
 
-public class Eyleyici implements IEyleyici {
+public class Eyleyici extends Observable implements IEyleyici {
 
-    @Override
-    public boolean SogutucuAc() {
-        return true;
+    private Islem sogutucuAcma;
+    private Islem sogutucuKapatma;
+    public Eyleyici(Islem sogutucuAcma, Islem sogutucuKapatma){
+        this.sogutucuAcma=sogutucuAcma;
+        this.sogutucuKapatma=sogutucuKapatma;
     }
 
     @Override
-    public boolean SogutucuKapat() {
-        return true;
+    public void SogutucuAc() {
+        if(SogutucuKapalimi()){
+            sogutucuAcma.islemYap();
+            haberVer("sicaklikdüsür");
+        }
+        else{
+            Ekran.mesajGoruntule("Soğutucu zaten açık..");
+        }
+        Ekran.mesajGoruntule("Ortalama sicaklik degeri: "+SicaklikUretici.getSicaklikDegeri());
     }
 
     @Override
-    public boolean SogutucuAcikmi(ISicaklikAlgilayici sicaklikAlgilayici){
-        if (sicaklikAlgilayici.getSicaklikDegeri()<0)
+    public void SogutucuKapat() {
+        if(SogutucuAcikmi()){
+            sogutucuKapatma.islemYap();
+            haberVer("odasicakligi");
+        }
+        else{
+            Ekran.mesajGoruntule("Soğtucu zaten kapalı..");
+        }
+        Ekran.mesajGoruntule("Ortalama sicaklik degeri: "+SicaklikUretici.getSicaklikDegeri());
+    }
+
+    public void observerEkle(SicaklikUretici sicaklikUretici){
+        ekle(sicaklikUretici);
+    }
+
+    private boolean SogutucuAcikmi(){
+        if (SicaklikUretici.getSicaklikDegeri()<0)
             return true;
         return false;
     }
 
-    @Override
-    public boolean SogutucuKapalimi(ISicaklikAlgilayici sicaklikAlgilayici) {
-        if(sicaklikAlgilayici.getSicaklikDegeri()>0)
+    private boolean SogutucuKapalimi() {
+        if(SicaklikUretici.getSicaklikDegeri()>0)
             return true;
         return false;
     }
+
 }
